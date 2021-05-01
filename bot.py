@@ -45,8 +45,7 @@ async def members(ctx):
 
 @bot.command()
 async def setup(ctx):
-    ctx.guild.create_category('Important')
-
+    await ctx.guild.create_category('Important')
     await ctx.send('Setting up class server')
     await ImportantCatagory.create_text_channel('announcemints')
 
