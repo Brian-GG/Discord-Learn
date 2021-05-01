@@ -24,6 +24,7 @@ class Schedule(commands.Cog):
         self.update.cancel()
 
     @commands.command(name='link-calendar')
+    @commands.has_role('Teacher')
     async def link_caldendar(self, ctx):
         creds = None
         if creds and creds.expired and creds.refresh_token:
@@ -39,6 +40,7 @@ class Schedule(commands.Cog):
         await ctx.send('Calendar has been linked!')
 
     @commands.command(name='schedule')
+    @commands.has_role('Teacher')
     async def show_schedule(self, ctx, arg):
         if self.service is None:
             await ctx.send("No calendar has been linked yet")
