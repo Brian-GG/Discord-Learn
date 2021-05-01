@@ -18,6 +18,8 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 bot.add_cog(Breakout(bot))
 
+StudentRole = None
+
 
 @bot.event
 async def on_ready():
@@ -32,7 +34,7 @@ async def ping(ctx):
 @bot.command()
 async def setuproles(ctx):
     await ctx.send('Setting up roles...')
-    await ctx.guild.create_role(name="Student", colour=discord.Colour(0xFFA500))
+    StudentRole = await ctx.guild.create_role(name="Student", colour=discord.Colour(0xFFA500))
     await ctx.guild.create_role(name="Teacher", colour=discord.Colour(0x3232FF), permissions=discord.Permissions(permissions=8))
     await ctx.guild.create_role(name="Assistant", colour=discord.Colour(0x800080))
 
@@ -46,8 +48,18 @@ async def members(ctx):
 @bot.command()
 async def setup(ctx):
     ImportantCatagory = await ctx.guild.create_category('Important')
+    DiscussionCatagory = await ctx.guild.create_category('Discussion')
+    InClassCatagory = await ctx.guild.create_category('In-class')
     await ctx.send('Setting up class server')
-    await ImportantCatagory.create_text_channel('announcemints', catagory=ImportantCatagory)
+
+    await ImportantCatagory.create_text_channel('Announcemints')
+    await ImportantCatagory.create_text_channel('Work submission')
+    await DiscussionCatagory.create_text_channel('General discussion')
+    await DiscussionCatagory.create_text_channel('Off topic discussion')
+    await DiscussionCatagory.create_voice_channel('General voice chat')
+    await InClassCatagory.create_text_channel('Questions')
+    await InClassCatagory.create_text_channel('No-microphone')
+    await ctx.guild.create_voice_channel('Class', category=InClassCatagory)
 
 
 bot.run(TOKEN)
