@@ -7,7 +7,7 @@ class Work(commands.Cog):
         self.client = client
     
     @commands.command(name='take attendance')
-   # @commands.has_role('Teacher')
+    @commands.has_role('Teacher')
     async def take_attendance(self, ctx):
         #Class
         guild = ctx.guild
@@ -15,10 +15,27 @@ class Work(commands.Cog):
         self.student_list = StudentList()
         channel = client.get_channel('Class')
         for member in members:
-            self.student_list.addStudent(member)
+            if member.name == 'Discord Learn' or member.name == ctx.author.name:
+                continue
+            else: self.student_list.addStudent(member)
         return self.student_list.checkAttendence(channel.members)
         
-
+    @commands.command(name = 'Report')
+    async def report(self, ctx, *args):
+        reason = ''
+        nameORep = args[0]
+        for i in range(1, len(args)):
+            reason+= str(args[i]) + ' '
+        guild = ctx.guild
+        Teacher = None
+        for member in guild.members:
+            if member.name == 'Vala.Ar':
+                 Teacher = member
+            for role in member.roles:
+                if role.name == 'Teacher':
+                    Teacher = member
+                    break
+        await Teacher.send(ctx.message.author.name + ' reported ' + nameORep + ' for ' + reason)           
     
 
 def setup(client):
