@@ -1,5 +1,28 @@
 import random
+import discord
+from discord.ext import commands
 
+class Work(commands.Cog):
+    def __init__(self,client):
+        self.client = client
+    
+    @commands.command(name='take attendance')
+   # @commands.has_role('Teacher')
+    async def take_attendance(self, ctx):
+        #Class
+        guild = ctx.guild
+        members = guild.members
+        self.student_list = StudentList()
+        channel = client.get_channel('Class')
+        for member in members:
+            self.student_list.addStudent(member)
+        return self.student_list.checkAttendence(channel.members)
+        
+
+    
+
+def setup(client):
+    client.add_cog(Example(client))
 
 class Classroom:
     def __init__(self, studentList, subject, ):
