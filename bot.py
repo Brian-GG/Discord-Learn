@@ -56,22 +56,49 @@ async def setup(ctx):
     InClassCatagory = await ctx.guild.create_category('In-class')
     await ctx.send('Setting up class server')
 
-    await ImportantCatagory.create_text_channel('Welcome')
-    await ImportantCatagory.create_text_channel('Announcements')
-    await ImportantCatagory.create_text_channel('Work submission')
-    await DiscussionCatagory.create_text_channel('General discussion')
-    await DiscussionCatagory.create_text_channel('Off topic discussion')
-    await DiscussionCatagory.create_voice_channel('General voice chat')
-    await InClassCatagory.create_text_channel('Questions')
-    await InClassCatagory.create_text_channel('No-microphone')
-    await InClassCatagory.create_text_channel('Polls')
+    welcomec = await ImportantCatagory.create_text_channel('Welcome')
+    announcementsc = await ImportantCatagory.create_text_channel('Announcements')
+    workc = await ImportantCatagory.create_text_channel('Work submission')
+    generalc = await DiscussionCatagory.create_text_channel('General discussion')
+    offc = await DiscussionCatagory.create_text_channel('Off topic discussion')
+    generalv = await DiscussionCatagory.create_voice_channel('General voice chat')
+    questionsc = await InClassCatagory.create_text_channel('Questions')
+    nomic = await InClassCatagory.create_text_channel('No-microphone')
+    pollsc = await InClassCatagory.create_text_channel('Polls')
     class_room = await ctx.guild.create_voice_channel('Class', category=InClassCatagory)
     for role in ctx.guild.roles:
         if role.name == 'Student':
             student = role
             break
-    await class_room.set_permissions(student, connect=True, speak=False)
 
+    await class_room.set_permissions(student, connect=True, speak=False)
+    await class_room.set_permissions(ctx.guild.roles[0], connect=True, speak=False)
+
+    await workc.set_permissions(ctx.guild.roles[0], read_messages=False, send_messages=False)
+    await generalc.set_permissions(ctx.guild.roles[0], read_messages=False, send_messages=False)
+    await offc.set_permissions(ctx.guild.roles[0], read_messages=False, send_messages=False)
+    await generalv.set_permissions(ctx.guild.roles[0], connect=False, speak=False)
+    await questionsc.set_permissions(ctx.guild.roles[0], read_messages=False, send_messages=False)
+    await nomic.set_permissions(ctx.guild.roles[0], read_messages=False, send_messages=False)
+    await pollsc.set_permissions(ctx.guild.roles[0], read_messages=False, send_messages=False)
+    await class_room.set_permissions(ctx.guild.roles[0], read_messages=False, send_messages=False)
+    
+    
+    
+    await workc.set_permissions(student, read_messages=True, send_messages=True)
+    await generalc.set_permissions(student, read_messages=True, send_messages=True)
+    await offc.set_permissions(student, read_messages=True, send_messages=True)
+    await generalv.set_permissions(student, connect=True, speak=True)
+    await questionsc.set_permissions(student, read_messages=True, send_messages=True)
+    await nomic.set_permissions(student, read_messages=True, send_messages=True)
+    await pollsc.set_permissions(student, read_messages=True, send_messages=True)
+    await class_room.set_permissions(student, read_messages=True, send_messages=True)
+
+
+    await welcomec.set_permissions(student,read_messages=True, send_messages=False) 
+    await welcomec.set_permissions(ctx.guild.roles[0],read_messages=True, send_messages=False) 
+    await announcementsc.set_permissions(student,read_messages=True, send_messages=False)
+    await announcementsc.set_permissions(ctx.guild.roles[0],read_messages=False, send_messages=False)
 
     Welcome_channel = discord.utils.get(ctx.guild.channels, name='welcome')
     await Welcome_channel.send("Welcome to your virtual classroom environment brought to you by Discord Learn first a couple things to keep in mind:")
