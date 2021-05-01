@@ -9,6 +9,8 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 client = discord.Client()
 
+prefix = '!'
+
 
 @client.event
 async def on_ready():
@@ -17,8 +19,13 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    if '!ping' in message.content.lower():
+    server = message.guild
+    name = message.author.name
+    if prefix + 'ping' in message.content.lower():
         await message.channel.send('pong!')
+    elif prefix + 'setup' in message.content.lower():
+        await message.channel.send('Setting up class server')
+        await server.create_text_channel('announcemints')
 
 
 client.run(TOKEN)
