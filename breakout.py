@@ -81,11 +81,16 @@ class Breakout(commands.Cog):
         return
 
     @commands.command(name='poll')
+    @commands.has_role('Teacher')
     async def create_poll(self, ctx, question, *options: str):
 
         guild = ctx.guild
 
         poll_channel = discord.utils.get(guild.channels, name='polls')
+
+        if poll_channel is None:
+            await ctx.send('The server is not setup. Please use the command !setup')
+            return
 
         if len(options) <= 1:
             await ctx.send('You need more than one option to make a poll!')
