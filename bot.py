@@ -18,8 +18,6 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 bot.add_cog(Breakout(bot))
 
-StudentRole = None
-
 
 @bot.event
 async def on_ready():
@@ -34,7 +32,7 @@ async def ping(ctx):
 @bot.command()
 async def setuproles(ctx):
     await ctx.send('Setting up roles...')
-    StudentRole = await ctx.guild.create_role(name="Student", colour=discord.Colour(0xFFA500))
+    await ctx.guild.create_role(name="Student", colour=discord.Colour(0xFFA500))
     await ctx.guild.create_role(name="Teacher", colour=discord.Colour(0x3232FF), permissions=discord.Permissions(permissions=8))
     await ctx.guild.create_role(name="Assistant", colour=discord.Colour(0x800080))
 
@@ -59,7 +57,12 @@ async def setup(ctx):
     await DiscussionCatagory.create_voice_channel('General voice chat')
     await InClassCatagory.create_text_channel('Questions')
     await InClassCatagory.create_text_channel('No-microphone')
-    await ctx.guild.create_voice_channel('Class', category=InClassCatagory)
+    class_room = await ctx.guild.create_voice_channel('Class', category=InClassCatagory)
+    for role in ctx.guild.roles:
+        if role.name == 'Student':
+            student = role
+            break
+    await class_room.set_permissions(student, connect=True, speak=False)
 
 
 bot.run(TOKEN)
