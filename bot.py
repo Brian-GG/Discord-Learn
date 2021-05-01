@@ -4,6 +4,7 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 from breakout import Breakout
+import asyncio
 from schedule import Schedule
 from students import Work
 
@@ -12,7 +13,6 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 intents = discord.Intents.default()
 intents.members = True
-
 prefix = '!'
 
 bot = commands.Bot(command_prefix='!', intents=intents)
@@ -37,6 +37,8 @@ async def setuproles(ctx):
     await ctx.guild.create_role(name="Student", colour=discord.Colour(0xFFA500))
     await ctx.guild.create_role(name="Teacher", colour=discord.Colour(0x3232FF), permissions=discord.Permissions(permissions=8))
     await ctx.guild.create_role(name="Assistant", colour=discord.Colour(0x800080))
+    
+    
 
 
 @bot.command()
@@ -44,9 +46,9 @@ async def setuproles(ctx):
 async def members(ctx):
     for member in ctx.guild.members:
         await ctx.send(member)
+    
 
-
-@bot.command()
+@bot.command(pass_context=True)
 @commands.has_role('Teacher')
 async def setup(ctx):
     ImportantCatagory = await ctx.guild.create_category('Important')
@@ -54,7 +56,8 @@ async def setup(ctx):
     InClassCatagory = await ctx.guild.create_category('In-class')
     await ctx.send('Setting up class server')
 
-    await ImportantCatagory.create_text_channel('Announcemints')
+    await ImportantCatagory.create_text_channel('Welcome')
+    await ImportantCatagory.create_text_channel('Announcements')
     await ImportantCatagory.create_text_channel('Work submission')
     await DiscussionCatagory.create_text_channel('General discussion')
     await DiscussionCatagory.create_text_channel('Off topic discussion')
@@ -62,13 +65,49 @@ async def setup(ctx):
     await InClassCatagory.create_text_channel('Questions')
     await InClassCatagory.create_text_channel('No-microphone')
     await InClassCatagory.create_text_channel('Polls')
-
     class_room = await ctx.guild.create_voice_channel('Class', category=InClassCatagory)
     for role in ctx.guild.roles:
         if role.name == 'Student':
             student = role
             break
     await class_room.set_permissions(student, connect=True, speak=False)
+
+    Welcome_channel = discord.utils.get(ctx.guild.channels, name='welcome')
+    await Welcome_channel.send("Welcome to your virtual classroom environment brought to you by Discord Learn first a couple things to keep in mind:")
+    await Welcome_channel.send("- Keep chat clean and be respectful to everyone")
+    await Welcome_channel.send("- You will get reminder pings for scheduled events such as class")
+    await Welcome_channel.send("- During class you'll be required to move into the class voice call and muted")
+    await Welcome_channel.send("- Please keep discussion topics in the correct text channel")
+    message = await Welcome_channel.send("That being said, react to this message with the check if you agree to these and you will get the Student role")
+    guild = ctx.guild
+
+    poll_channel = discord.utils.get(guild.channels, name='welcome')
+
+    if poll_channel is None:
+        await ctx.send('The server is not setup. Please use the command !setup')
+        return
+    reactions = ['✅']
+    for reaction in reactions:
+        await message.add_reaction(reaction)
+
+
+
+@bot.event
+async def on_reaction_add(reaction, user):
+    if reaction.message.channel.name != 'welcome':
+        return
+    student = None
+    for role in reaction.message.guild.roles:
+        if role.name == 'Student':
+            student = role
+            break
+    
+    users = await reaction.users().flatten()
+    for person in users:
+        await person.add_roles(student)
+
+#    if str(reaction.emoji) == ":HotS_Tank:":
+#        await bot.add_roles(user, roleHOTS_Tank)
 
 
 @bot.command()
@@ -78,5 +117,7 @@ async def self_destruction(ctx):
         await category.delete()
     for channel in ctx.guild.channels:
         await channel.delete()
+
+
 
 bot.run(TOKEN)
