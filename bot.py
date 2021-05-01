@@ -72,6 +72,7 @@ async def setup(ctx):
             break
     await class_room.set_permissions(student, connect=True, speak=False)
 
+
     Welcome_channel = discord.utils.get(ctx.guild.channels, name='welcome')
     await Welcome_channel.send("Welcome to your virtual classroom environment brought to you by Discord Learn first a couple things to keep in mind:")
     await Welcome_channel.send("- Keep chat clean and be respectful to everyone")
