@@ -1,39 +1,49 @@
-# bot.py
+
 import os
 
 import discord
+from discord.ext import commands
 from dotenv import load_dotenv
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-client = discord.Client()
+intents = discord.Intents.default()
+intents.members = True
 
 prefix = '!'
 
+bot = commands.Bot(command_prefix='!', intents=intents)
 
-@client.event
+
+@bot.event
 async def on_ready():
-    print(f'{client.user} has connected to Discord!')
+    print(f'{bot.user} has connected to Discord!')
 
 
-@client.event
-async def on_message(message):
-    server = message.guild
-    name = message.author.name
-
-    if prefix + 'ping' in message.content.lower():
-        await message.channel.send('pong!')
-    elif prefix + 'setuproles' in message.content.lower():
-        await message.channel.send('Setting up roles...')
-        await server.create_role(name="Student", colour=discord.Colour(0xFFA500))
-        await server.create_role(name="Teacher", colour=discord.Colour(0x3232FF), permissions=discord.Permissions(permissions=8))
-        await server.create_role(name="Assistant", colour=discord.Colour(0x800080))
-
-    if message.author.roles
-    if prefix + 'setup' in message.content.lower():
-        await message.channel.send('Setting up class server')
-        await server.create_text_channel('announcemints')
+@bot.command()
+async def ping(ctx):
+    await ctx.send('pong!')
 
 
-client.run(TOKEN)
+@bot.command()
+async def setuproles(ctx):
+    await ctx.send('Setting up roles...')
+    await ctx.guild.create_role(name="Student", colour=discord.Colour(0xFFA500))
+    await ctx.guild.create_role(name="Teacher", colour=discord.Colour(0x3232FF), permissions=discord.Permissions(permissions=8))
+    await ctx.guild.create_role(name="Assistant", colour=discord.Colour(0x800080))
+
+
+@bot.command()
+async def members(ctx):
+    for member in ctx.guild.members:
+        await ctx.send(member)
+
+
+@bot.command()
+async def setup(ctx):
+    await ctx.send('Setting up class server')
+    await create_category('❗-Important')
+    await ctx.guild.create_text_channel('announcemints')
+
+bot.run(TOKEN)
