@@ -10,6 +10,9 @@ class Breakout(commands.Cog):
     @commands.command(name='create-breakout')
     @commands.has_role('Teacher')
     async def create_breakout(self, ctx, arg):
+        """Create breakout rooms. arg is the number of students to be placed in each breakout room.
+        The caller of the command must have the role Teacher and must be connected to a voice channel.
+        """
         member_per_room = int(arg)
 
         guild = ctx.guild
@@ -50,6 +53,9 @@ class Breakout(commands.Cog):
     @commands.command(name='end-breakout')
     @commands.has_role('Teacher')
     async def end_breakout(self, ctx):
+        """Close all currently open breakout rooms and bring students to the voice channel the caller of
+        the command is in. The caller of the command must have the role Teacher and must be in a voice channel.
+        """
         guild = ctx.guild
 
         if ctx.author.voice and ctx.author.voice.channel:
@@ -85,6 +91,11 @@ class Breakout(commands.Cog):
     @commands.command(name='poll')
     @commands.has_role('Teacher')
     async def create_poll(self, ctx, question, *options: str):
+        """Create a poll in the text channel polls. question is the question to be asked and must be enclosed
+        with quotation marks. (Ex. "What is the answer to Question 3?"). options are choice to be made available
+        for the poll. There can be up to 10 options, and if there are only 2 options and each option is yes and no,
+        the poll will be a yes or no poll. The command !setup must be ran before this command is evoked.
+        """
 
         guild = ctx.guild
 
