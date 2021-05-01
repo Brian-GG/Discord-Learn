@@ -26,6 +26,9 @@ class Schedule(commands.Cog):
     @commands.command(name='link-calendar')
     @commands.has_role('Teacher')
     async def link_caldendar(self, ctx):
+        """Link a primary calendar from a Google account to the bot. The caller of the command
+        must have the role Teacher
+        """
         creds = None
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
@@ -40,8 +43,10 @@ class Schedule(commands.Cog):
         await ctx.send('Calendar has been linked!')
 
     @commands.command(name='schedule')
-    @commands.has_role('Teacher')
     async def show_schedule(self, ctx, arg):
+        """Show up to arg number of upcoming events in the linked schedule. The command
+        !link-calendar must be ran before.
+        """
         if self.service is None:
             await ctx.send("No calendar has been linked yet")
             return
