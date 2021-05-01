@@ -4,6 +4,7 @@ import os
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
+from breakout import Breakout
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -15,6 +16,7 @@ prefix = '!'
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
+bot.add_cog(Breakout(bot))
 
 @bot.event
 async def on_ready():
