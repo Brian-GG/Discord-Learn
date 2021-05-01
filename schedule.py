@@ -5,7 +5,7 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 import datetime
-import time
+import asyncio
 
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
@@ -13,6 +13,8 @@ SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 class Schedule(commands.Cog):
 
     service: googleapiclient.discovery.Resource
+    guild: None
+    has_pinged: bool = False
 
     def __init__(self, bot):
         self.bot = bot
@@ -32,6 +34,7 @@ class Schedule(commands.Cog):
             creds = flow.run_local_server(port=0)
 
         self.service = build('calendar', 'v3', credentials=creds)
+        self.guild = ctx.guild
         self.update.start()
         await ctx.send('Calendar has been linked!')
 
@@ -42,7 +45,7 @@ class Schedule(commands.Cog):
             return
 
         num_events = int(arg)
-        now = datetime.datetime.utcnow().isoformat() + 'Z'
+        now = datetime.datetime.now().isoformat() + '-04:00'
         events_result = self.service.events().list(calendarId='primary', timeMin=now,
                                                    maxResults=num_events, singleEvents=True,
                                                    orderBy='startTime').execute()
@@ -55,10 +58,10 @@ class Schedule(commands.Cog):
                 event_name = '**' + event['summary'] + '**'
                 await ctx.send(event_name)
 
-                start = event['start'].get('dateTime', event['start'].get('date'))[:-6:]
+                start = event['start'].get('dateTime', event['start'].get('date'))[:-6]
                 start_datetime = datetime.datetime.strptime(start, "%Y-%m-%dT%H:%M:%S")
 
-                end = event['end'].get('dateTime', event['end'].get('date'))[:-6:]
+                end = event['end'].get('dateTime', event['end'].get('date'))[:-6]
                 end_datetime = datetime.datetime.strptime(end, "%Y-%m-%dT%H:%M:%S")
 
                 event_time = str(start_datetime.month) + '/' + str(start_datetime.day) + ', ' + \
@@ -69,23 +72,31 @@ class Schedule(commands.Cog):
 
     @tasks.loop(seconds=20.0)
     async def update(self):
-        now = datetime.datetime.utcnow()
-        now_str = now.isoformat() + 'Z'
+        self.has_pinged = False
+        now = datetime.datetime.now()
+        now_str = now.isoformat() + '-04:00'
         next_events = self.service.events().list(calendarId='primary', timeMin=now_str,
                                                    maxResults=3, singleEvents=True,
                                                    orderBy='startTime').execute()
 
-        for event in next_events:
-            start = event['start'].get('dateTime', event['start'].get('date'))[:-6:]
+        events = next_events.get('items', [])
+
+        for event in events:
+            start = event['start'].get('dateTime', event['start'].get('date'))
+            start = start[:-6]
             start_datetime = datetime.datetime.strptime(start, "%Y-%m-%dT%H:%M:%S")
 
             if now.date() == start_datetime.date() and now.hour == start_datetime.hour and start_datetime.minute - now.minute == 10:
-                channel = discord.utils.get(self.bot.guild.channels, name='announcemints')
+                channel = discord.utils.get(self.guild.channels, name='announcemints')
 
-                for role in self.bot.guild.roles:
+                for role in self.guild.roles:
                     if role.name == 'Student':
                         student = role
                         break
 
                 event_name = '**' + event['summary'] + '**'
-                await channel.send(f'{student.mention}' + event_name + " will start in 10 minutes!")
+                await channel.send(f'{student.mention}' + ' ' + event_name + " will start in 10 minutes!")
+                self.has_pinged = True
+
+        if self.has_pinged:
+            await asyncio.sleep(60)

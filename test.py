@@ -36,7 +36,7 @@ def main():
     print(type(service))
 
     # Call the Calendar API
-    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    now = datetime.datetime.now().isoformat() + '-04:00' # 'Z' indicates UTC time
     print('Getting the upcoming 10 events')
     events_result = service.events().list(calendarId='primary', timeMin=now,
                                         maxResults=10, singleEvents=True,
