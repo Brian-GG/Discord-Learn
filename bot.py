@@ -9,10 +9,16 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 client = discord.Client()
 
+
 @client.event
 async def on_ready():
-    await channel.send("hello world") 
     print(f'{client.user} has connected to Discord!')
-    
+
+
+@client.event
+async def on_message(message):
+    if '!ping' in message.content.lower():
+        await message.channel.send('pong!')
+
 
 client.run(TOKEN)
