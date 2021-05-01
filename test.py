@@ -46,7 +46,8 @@ def main():
     if not events:
         print('No upcoming events found.')
     for event in events:
-        start = event['start'].get('dateTime', event['start'].get('date'))
+        start = event['end'].get('dateTime', event['end'].get('date'))
+        start = start[:-6:]
         print(start, event['summary'])
 
 
