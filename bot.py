@@ -57,6 +57,8 @@ async def setup(ctx):
     await DiscussionCatagory.create_voice_channel('General voice chat')
     await InClassCatagory.create_text_channel('Questions')
     await InClassCatagory.create_text_channel('No-microphone')
+    await InClassCatagory.create_text_channel('Polls')
+
     class_room = await ctx.guild.create_voice_channel('Class', category=InClassCatagory)
     for role in ctx.guild.roles:
         if role.name == 'Student':
