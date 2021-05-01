@@ -18,6 +18,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 
 bot.add_cog(Breakout(bot))
 
+
 @bot.event
 async def on_ready():
     print(f'{bot.user} has connected to Discord!')
@@ -44,8 +45,10 @@ async def members(ctx):
 
 @bot.command()
 async def setup(ctx):
+    ctx.guild.create_category('Important')
+
     await ctx.send('Setting up class server')
-    await ctx.guild.create_category('Important')
-    await ctx.guild.create_text_channel('announcemints')
+    await ImportantCatagory.create_text_channel('announcemints')
+
 
 bot.run(TOKEN)
