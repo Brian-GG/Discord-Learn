@@ -8,6 +8,7 @@ class Breakout(commands.Cog):
         self.bot = bot
 
     @commands.command(name='create-breakout')
+    @commands.has_role('Teacher')
     async def create_breakout(self, ctx, arg):
         member_per_room = int(arg)
 
@@ -47,6 +48,7 @@ class Breakout(commands.Cog):
         await ctx.send("Breakout Rooms Created!")
 
     @commands.command(name='end-breakout')
+    @commands.has_role('Teacher')
     async def end_breakout(self, ctx):
         guild = ctx.guild
 
