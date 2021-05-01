@@ -67,4 +67,12 @@ async def setup(ctx):
     await class_room.set_permissions(student, connect=True, speak=False)
 
 
+@bot.command()
+async def self_destruction(ctx):
+    for category in ctx.guild.categories:
+        await category.delete()
+    for channel in ctx.guild.channels:
+        if channel
+        await channel.delete()
+
 bot.run(TOKEN)
