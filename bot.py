@@ -1,4 +1,3 @@
-
 import os
 
 import discord
@@ -38,12 +37,14 @@ async def setuproles(ctx):
 
 
 @bot.command()
+@commands.has_role('Teacher')
 async def members(ctx):
     for member in ctx.guild.members:
         await ctx.send(member)
 
 
 @bot.command()
+@commands.has_role('Teacher')
 async def setup(ctx):
     ImportantCatagory = await ctx.guild.create_category('Important')
     DiscussionCatagory = await ctx.guild.create_category('Discussion')
@@ -68,6 +69,7 @@ async def setup(ctx):
 
 
 @bot.command()
+@bot.command.has_role('Teacher')
 async def self_destruction(ctx):
     for category in ctx.guild.categories:
         await category.delete()
