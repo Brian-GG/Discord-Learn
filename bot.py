@@ -21,8 +21,11 @@ async def on_ready():
 async def on_message(message):
     server = message.guild
     name = message.author.name
+
     if prefix + 'ping' in message.content.lower():
         await message.channel.send('pong!')
+    elif prefix + '' in message.content.lower():
+
     elif prefix + 'setup' in message.content.lower():
         await message.channel.send('Setting up class server')
         await server.create_text_channel('announcemints')
