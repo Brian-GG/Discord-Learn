@@ -69,7 +69,7 @@ async def setup(ctx):
 
 
 @bot.command()
-@bot.command.has_role('Teacher')
+@commands.has_role('Teacher')
 async def self_destruction(ctx):
     for category in ctx.guild.categories:
         await category.delete()
