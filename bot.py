@@ -7,6 +7,7 @@ from breakout import Breakout
 import asyncio
 from schedule import Schedule
 from students import Work
+from interactions import Interactions
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -20,6 +21,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 bot.add_cog(Breakout(bot))
 bot.add_cog(Work(bot))
 bot.add_cog(Schedule(bot))
+bot.add_cog(Interactions(bot))
 
 @bot.event
 async def on_ready():
