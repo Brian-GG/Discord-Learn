@@ -9,6 +9,8 @@ class Work(commands.Cog):
     @commands.command(name='attendance')
     @commands.has_role('Teacher')
     async def take_attendance(self, ctx):
+        """Takes the attendance of people in the Class voice channel. The caller of the command must have
+        the role of Teacher"""
         #Class
         guild = ctx.guild
         members = guild.members
@@ -32,6 +34,7 @@ class Work(commands.Cog):
         await ctx.send(message + ' are not present')
 
     @commands.command(name = 'Report')
+    """Allows a Student to report another person, and send a PM directly to the Teacher"""
     async def report(self, ctx, *args):
         reason = ''
         nameORep = args[0]
@@ -47,6 +50,7 @@ class Work(commands.Cog):
         await Teacher.send(ctx.message.author.name + ' reported ' + nameORep + ' for ' + reason)           
     
     @commands.command(name = 'Give')
+    """Gives certain members in the channel the Teacher Role"""
     async def Teacher(self, ctx, arg):
         guild = ctx.guild
         member = ctx.message.author
