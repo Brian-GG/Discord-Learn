@@ -87,8 +87,9 @@ async def setup(ctx):
     await adminc.set_permissions(ctx.guild.roles[0], read_messages=False, send_messages=False)
     await adminc.set_permissions(student, read_messages=False, send_messages=False)
 
+    await class_room.set_permissions(ctx.guild.roles[0], connect=False, speak=False)
     await class_room.set_permissions(student, connect=True, speak=False)
-    await class_room.set_permissions(ctx.guild.roles[0], connect=True, speak=False)
+
     
     await workc.set_permissions(student, read_messages=True, send_messages=True)
     await generalc.set_permissions(student, read_messages=True, send_messages=True)
