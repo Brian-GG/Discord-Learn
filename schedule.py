@@ -94,7 +94,7 @@ class Schedule(commands.Cog):
             start_datetime = datetime.datetime.strptime(start, "%Y-%m-%dT%H:%M:%S")
 
             if now.date() == start_datetime.date() and now.hour == start_datetime.hour and start_datetime.minute - now.minute == 10:
-                channel = discord.utils.get(self.guild.channels, name='announcemints')
+                channel = discord.utils.get(self.guild.channels, name='announcements')
 
                 for role in self.guild.roles:
                     if role.name == 'Student':
