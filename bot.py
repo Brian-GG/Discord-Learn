@@ -65,7 +65,7 @@ async def setup(ctx):
     questionsc = await InClassCatagory.create_text_channel('Questions')
     nomic = await InClassCatagory.create_text_channel('No-microphone')
     pollsc = await InClassCatagory.create_text_channel('Polls')
-    adminc = await ctx.create_text_channel('Admin bot usage')
+    adminc = await ctx.guild.create_text_channel('Admin bot usage')
 
     class_room = await ctx.guild.create_voice_channel('Class', category=InClassCatagory)
     for role in ctx.guild.roles:
