@@ -125,6 +125,15 @@ async def setup(ctx):
     for reaction in reactions:
         await message.add_reaction(reaction)
 
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send('Please input all of the required inputs')
+    if isinstance(error, commands.CommandNotFound):
+        await ctx.send('Command not recognized')
+    if isinstance(error, commands.CommandOnCooldown):
+        person = ctx.author
+        await person.send('Stop Spamming The Chat >:(')
 
 
 @bot.event
