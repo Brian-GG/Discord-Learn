@@ -34,8 +34,8 @@ class Work(commands.Cog):
         await ctx.send(message + ' are not present')
 
     @commands.command(name = 'Report')
-    """Allows a Student to report another person, and send a PM directly to the Teacher"""
     async def report(self, ctx, *args):
+    """Allows a Student to report another person, and send a PM directly to the Teacher"""
         reason = ''
         nameORep = args[0]
         for i in range(1, len(args)):
@@ -50,8 +50,8 @@ class Work(commands.Cog):
         await Teacher.send(ctx.message.author.name + ' reported ' + nameORep + ' for ' + reason)           
     
     @commands.command(name = 'Give')
-    """Gives certain members in the channel the Teacher Role"""
     async def Teacher(self, ctx, arg):
+    """Gives certain members in the channel the Teacher Role"""
         guild = ctx.guild
         member = ctx.message.author
         for roles in guild.roles:
