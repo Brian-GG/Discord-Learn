@@ -65,6 +65,8 @@ async def setup(ctx):
     questionsc = await InClassCatagory.create_text_channel('Questions')
     nomic = await InClassCatagory.create_text_channel('No-microphone')
     pollsc = await InClassCatagory.create_text_channel('Polls')
+    adminc = await ctx.create_text_channel('Admin bot usage')
+
     class_room = await ctx.guild.create_voice_channel('Class', category=InClassCatagory)
     for role in ctx.guild.roles:
         if role.name == 'Student':
@@ -83,6 +85,9 @@ async def setup(ctx):
     await pollsc.set_permissions(ctx.guild.roles[0], read_messages=False, send_messages=False)
     await class_room.set_permissions(ctx.guild.roles[0], read_messages=False, send_messages=False)
     
+    await adminc.set_permissions(ctx.guild.roles[0], read_messages=False, send_messages=False)
+    await adminc.set_permissions(student, read_messages=False, send_messages=False)
+
     
     
     await workc.set_permissions(student, read_messages=True, send_messages=True)
@@ -92,7 +97,7 @@ async def setup(ctx):
     await questionsc.set_permissions(student, read_messages=True, send_messages=True)
     await nomic.set_permissions(student, read_messages=True, send_messages=True)
     await pollsc.set_permissions(student, read_messages=True, send_messages=True)
-    
+
 
     await welcomec.set_permissions(student,read_messages=True, send_messages=False) 
     await welcomec.set_permissions(ctx.guild.roles[0],read_messages=True, send_messages=False) 
