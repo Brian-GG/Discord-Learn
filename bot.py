@@ -92,8 +92,7 @@ async def setup(ctx):
     await questionsc.set_permissions(student, read_messages=True, send_messages=True)
     await nomic.set_permissions(student, read_messages=True, send_messages=True)
     await pollsc.set_permissions(student, read_messages=True, send_messages=True)
-    await class_room.set_permissions(student, read_messages=True, send_messages=True)
-
+    
 
     await welcomec.set_permissions(student,read_messages=True, send_messages=False) 
     await welcomec.set_permissions(ctx.guild.roles[0],read_messages=True, send_messages=False) 
